@@ -1,4 +1,4 @@
-/// @param input_index
+/// @param input_slot
 /// @param keyboard_button
 /// @param [keyboard_button]
 

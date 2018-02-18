@@ -1,15 +1,15 @@
-enum E_INPUT { UP,
-               DOWN,
-               LEFT,
-               RIGHT,
-               JUMP, //Add your own enum element to add another input slot
-               __SIZE }
+enum E_INPUT_SLOT { UP,
+                    DOWN,
+                    LEFT,
+                    RIGHT,
+                    JUMP, //Add your own enum element to add another input slot
+                    __SIZE }
 
-enum E_STATE { PRESSED, ON, RELEASED,                    //Simple behaviours
-               REPEATED, LONG, DOUBLE,                   //Advanced behaviours
-               PRESSED_TIME, PRESSED_INDEX, REPEAT_TIME, //Timers
-               NEW_ON, NEW_PRESSED_INDEX,                //Momentary states
-               __SIZE }
+enum E_INPUT_STATE { PRESSED, ON, RELEASED,                    //Simple behaviours
+                     REPEATED, LONG, DOUBLE,                   //Advanced behaviours
+                     PRESSED_TIME, PRESSED_INDEX, REPEAT_TIME, //Timers
+                     NEW_ON, NEW_PRESSED_INDEX,                //Momentary states
+                     __SIZE }
 
 //Millisecond delay times for advanced behaviours
 repeat_delay = 280;

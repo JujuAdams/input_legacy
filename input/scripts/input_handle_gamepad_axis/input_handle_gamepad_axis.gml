@@ -1,4 +1,4 @@
-/// @param input_index
+/// @param input_slot
 /// @param device
 /// @param axis
 /// @param threshold
