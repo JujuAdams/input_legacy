@@ -18,8 +18,10 @@
         <script>scripts\input_handle_gamepad_button.gml</script>
         <script>scripts\input_handle_keyboard.gml</script>
         <script>scripts\input_handle_mouse.gml</script>
+        <script>scripts\input_handle_swipe.gml</script>
         <script>scripts\input_refresh_begin.gml</script>
         <script>scripts\input_refresh_end.gml</script>
+        <script>scripts\input_detect_swipe.gml</script>
       </scripts>
       <script>scripts\input_check.gml</script>
       <script>scripts\input_check_pressed.gml</script>

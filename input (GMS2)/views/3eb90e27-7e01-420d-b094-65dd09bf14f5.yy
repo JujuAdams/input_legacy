@@ -11,7 +11,9 @@
         "47655098-3989-4e7d-a10d-e136a65b9543",
         "02748cfe-f510-4ad0-8256-3b1b94758fc1",
         "c71a2bb5-41a0-4e92-a9c6-62fa8c2a5a46",
-        "0707feba-ccec-4dbb-a326-4579061dd07e"
+        "0707feba-ccec-4dbb-a326-4579061dd07e",
+        "101defae-9301-4c4b-bc5b-ca59a6f6a3fe",
+        "dda3f557-2f83-4f3a-8525-ab0f6f62e35d"
     ],
     "filterType": "GMScript",
     "folderName": "system",
