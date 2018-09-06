@@ -27,6 +27,7 @@
       <script>scripts\input_check_repeated.gml</script>
       <script>scripts\input_check_long.gml</script>
       <script>scripts\input_check_double.gml</script>
+      <script>scripts\input_check_analogue.gml</script>
     </scripts>
   </scripts>
   <objects name="objects">
