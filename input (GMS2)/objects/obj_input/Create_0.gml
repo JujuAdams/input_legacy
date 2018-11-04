@@ -9,7 +9,7 @@ enum E_INPUT_STATE { PRESSED, ON, RELEASED,                    //Simple behaviou
                      REPEATED, LONG, DOUBLE,                   //Advanced behaviours
                      PRESSED_TIME, PRESSED_INDEX, REPEAT_TIME, //Timers
                      NEW_ON, NEW_PRESSED_INDEX,                //Momentary states
-					 ANALOGUE,                                   //Get the analog value
+                     ANALOGUE,                                 //Get the analog value
                      __SIZE }
 
 //Millisecond delay times for advanced behaviours
