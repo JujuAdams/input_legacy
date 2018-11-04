@@ -44,8 +44,8 @@ repeat_delay = 280;
 long_delay   = 400;
 double_delay = 210;
 
-//We're using gamepad device 0
-gamepad_device = 0;
+//No device has been found yet. This variable is handled in "Async - System"
+gamepad_device = -1;
 
 //Initialise the input system
 input_clear();
@@ -104,6 +104,46 @@ input_refresh_end(); //Actual state processing happens in this script
         </arguments>
       </action>
     </event>
+    <event eventtype="7" enumb="75">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if ( async_load[? "event_type" ] = "gamepad discovered" )
+{
+    //If a new controller has been connected...
+    var _slot = async_load[? "pad_index" ];
+    
+    if ( gamepad_device &lt; 0 )
+    {
+        //If we're not already set a gamepad, don't bother showing the confirmation dialogue
+        gamepad_device = _slot;
+        input_clear(); //Always clear your input states when changing controllers
+    }
+    else if ( show_question( "A new gamepad in slot " + string( _slot ) + " has been found.##Would you like to swap to it?" ) )
+    {
+        //If the user has confirmed they want to change slot, do so!
+        gamepad_device = _slot;
+        input_clear(); //Always clear your input states when changing controllers
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="8" enumb="0">
       <action>
         <libid>1</libid>
@@ -122,8 +162,10 @@ input_refresh_end(); //Actual state processing happens in this script
           <argument>
             <kind>1</kind>
             <string>//Creator info
-draw_text( 10, 10, "INPUT1.2\n\n@jujuadams 2018/02/15" );
+draw_text( 10, 10, "INPUT1.4##@jujuadams 2018/11/04" );
 
+//Show what gamepad slot we're currently listening to
+draw_text( 10, 100, "gamepad_device=" + string( gamepad_device ) );
 </string>
           </argument>
         </arguments>
