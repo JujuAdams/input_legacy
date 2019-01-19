@@ -19,7 +19,7 @@ input_handle_gamepad_axis(   E_INPUT_SLOT.RIGHT, gamepad_device, gp_axislh,  0.3
 input_handle_gamepad_button( E_INPUT_SLOT.RIGHT, gamepad_device, gp_padr );
 input_handle_keyboard(       E_INPUT_SLOT.RIGHT, vk_right, ord("D") );
 
-input_handle_gamepad_button( E_INPUT_SLOT.JUMP , gamepad_device, gp_face1 );
+input_handle_gamepad_button( E_INPUT_SLOT.JUMP , gamepad_device, gp_face1, gp_face2, gp_face3, gp_face4 );
 input_handle_keyboard(       E_INPUT_SLOT.JUMP , vk_space, vk_enter );
 input_handle_mouse(          E_INPUT_SLOT.JUMP , mb_left );
 

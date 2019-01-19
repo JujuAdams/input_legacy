@@ -127,22 +127,6 @@
             }
         },
         {
-            "Key": "3a5af38c-757d-41ae-98c0-5d4b09e14e6a",
-            "Value": {
-                "id": "287cc3c6-8dd2-49ca-8c8f-2ef416e3c0ab",
-                "resourcePath": "options\\switch\\options_switch.yy",
-                "resourceType": "GMSwitchOptions"
-            }
-        },
-        {
-            "Key": "3a5af38c-757d-44ae-98c0-5d4b09e14e6a",
-            "Value": {
-                "id": "50844f41-0346-4e78-af66-fe6b1d6b24de",
-                "resourcePath": "options\\ps4\\options_ps4.yy",
-                "resourceType": "GMPS4Options"
-            }
-        },
-        {
             "Key": "3eb90e27-7e01-420d-b094-65dd09bf14f5",
             "Value": {
                 "id": "b970d64c-282a-47b8-90fe-7a29fc0eb0b5",
@@ -231,6 +215,14 @@
             }
         },
         {
+            "Key": "7a22162a-a802-4153-8fb5-039d38713d62",
+            "Value": {
+                "id": "b0768528-c62a-4632-b2dd-9b68ff9a16f0",
+                "resourcePath": "scripts\\input_is_analogue\\input_is_analogue.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "7e093a2a-e51c-4a1e-9a53-f9080d38730b",
             "Value": {
                 "id": "834ef1dc-d014-4f9f-bcdc-17e64731602e",
@@ -252,6 +244,14 @@
                 "id": "b622036d-05a6-4853-b4f6-094a72076854",
                 "resourcePath": "options\\ios\\options_ios.yy",
                 "resourceType": "GMiOSOptions"
+            }
+        },
+        {
+            "Key": "886b2235-e5a8-459f-9da0-d25dbe3d58ee",
+            "Value": {
+                "id": "13e2ec7b-6a44-422a-9d35-bb60ab82dc11",
+                "resourcePath": "scripts\\input_device_kind\\input_device_kind.yy",
+                "resourceType": "GMScript"
             }
         },
         {
@@ -307,6 +307,14 @@
             "Value": {
                 "id": "eda6897c-c884-4780-b272-e885ea87ab3f",
                 "resourcePath": "scripts\\input_check\\input_check.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "a87c1723-ab1e-439d-b6f7-edcb66c02e84",
+            "Value": {
+                "id": "b0fab5be-50b3-4fa6-a360-c46213e2e181",
+                "resourcePath": "scripts\\input_check_double_released\\input_check_double_released.yy",
                 "resourceType": "GMScript"
             }
         },
@@ -375,6 +383,14 @@
             }
         },
         {
+            "Key": "cec2566b-c654-4ab9-9f34-c2d2780f6f8e",
+            "Value": {
+                "id": "30bf9cb6-d29d-4292-abe9-6e813790604c",
+                "resourcePath": "scripts\\input_check_double_pressed\\input_check_double_pressed.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "d06c3946-0652-48ee-9e6c-52685027ee3c",
             "Value": {
                 "id": "8dc2831e-ad10-498d-a66d-822a107ce9c2",
@@ -425,13 +441,15 @@
     ],
     "script_order": [
         "15a1ac6d-c82e-47e8-a0b1-9643e7f730a6",
-        "a8153fcf-c12d-4d6f-93f6-3c67378e0f20",
         "8376be77-3e82-4954-ae65-ce0d70f67c85",
+        "a8153fcf-c12d-4d6f-93f6-3c67378e0f20",
         "f96f708b-2adc-438b-a6ab-288fad51a744",
+        "01d4311c-50b0-4670-92da-17e9a9c04238",
         "63db4b68-977c-40ba-b170-120301fd993b",
         "c19ecb7b-9ff0-45b5-85e7-a2260dfa57f7",
-        "01d4311c-50b0-4670-92da-17e9a9c04238",
+        "cec2566b-c654-4ab9-9f34-c2d2780f6f8e",
         "c40f0bb3-32fe-4033-b541-65fd428842bc",
+        "a87c1723-ab1e-439d-b6f7-edcb66c02e84",
         "1417e5af-b371-4550-ba52-64dfa9642f38",
         "65cc3734-3382-4c53-9d74-cf5f9fcb016c",
         "f8f8eb65-74d4-4fb5-9af1-46bb32b8c68a",
@@ -440,6 +458,8 @@
         "02748cfe-f510-4ad0-8256-3b1b94758fc1",
         "c71a2bb5-41a0-4e92-a9c6-62fa8c2a5a46",
         "0707feba-ccec-4dbb-a326-4579061dd07e",
+        "886b2235-e5a8-459f-9da0-d25dbe3d58ee",
+        "7a22162a-a802-4153-8fb5-039d38713d62",
         "72572dc4-3a72-4fbb-b501-46b2b118a7a4",
         "4ca30183-d931-43c5-89eb-3496af79795b"
     ],
