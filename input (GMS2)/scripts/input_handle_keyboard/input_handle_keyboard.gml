@@ -1,7 +1,7 @@
 /// @param player
-/// @param input_slot
-/// @param keyboard_button
-/// @param [keyboard_button...]
+/// @param inputSlot
+/// @param keyboardButton
+/// @param [keyboardButton...]
 
 var _player     = argument[0];
 var _input_slot = argument[1];
