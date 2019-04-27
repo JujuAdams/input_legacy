@@ -1,3 +1,3 @@
-/// @param number_of_players
+/// @param numberOfPlayers
 
 input_max_players = argument0;

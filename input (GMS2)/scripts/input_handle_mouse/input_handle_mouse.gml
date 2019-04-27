@@ -1,4 +1,4 @@
-/// @param input_slot
+/// @param inputSlot
 /// @param button
 /// @param [device]
 
@@ -7,7 +7,7 @@ var _input_slot = argument[1];
 var _button     = argument[2];
 var _device     = ((argument_count > 3) && (argument[3] != undefined))? argument[3] : 0;
 
-if ( device_mouse_check_button( _device, _button ) )
+if (device_mouse_check_button(_device, _button))
 {
     __input_handle_general( _player,
                             _input_slot,

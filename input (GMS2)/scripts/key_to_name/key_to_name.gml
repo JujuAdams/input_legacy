@@ -3,13 +3,13 @@
 
 var _ord = argument0;
 
-if ( _ord >= 33 ) && ( _ord <= 126 )
+if ((_ord >= 33) && (_ord <= 126))
 {
-    var _string = chr( _ord );
-    if ( string_length( _string ) == 1 ) return _string;
+    var _string = chr(_ord);
+    if (string_length(_string) == 1) return _string;
 }
 
-switch( _ord )
+switch(_ord)
 {
     case vk_escape:    return "ESCAPE";        break;
     case vk_shift:     return "SHIFT";         break;

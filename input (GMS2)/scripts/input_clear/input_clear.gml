@@ -10,13 +10,13 @@ enum E_INPUT_STATE
     __SIZE
 }
 
-for( var _p = 0; _p < input_max_players; _p++ )
+for(var _p = 0; _p < input_max_players; _p++)
 {
     var _offset = _p*E_INPUT_SLOT.__SIZE;
     
-    for( var _y = E_INPUT_STATE.__SIZE-1; _y >= 0; _y-- )
+    for(var _y = 0; _y < E_INPUT_STATE.__SIZE; _y++)
     {
-    	for( var _x = E_INPUT_SLOT.__SIZE-1; _x >= 0; _x-- )
+    	for(var _x = 0; _x < E_INPUT_SLOT.__SIZE; _x++)
         {
     		input_state[ _offset + _x, _y ] = false;
     	}

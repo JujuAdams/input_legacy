@@ -79,14 +79,6 @@
             }
         },
         {
-            "Key": "15a1ac6d-c82e-47e8-a0b1-9643e7f730a6",
-            "Value": {
-                "id": "b8c84f8b-5e86-4c58-be74-0676f80cd9c6",
-                "resourcePath": "scripts\\__input_readme\\__input_readme.yy",
-                "resourceType": "GMScript"
-            }
-        },
-        {
             "Key": "1a403771-e9a3-48be-b72a-e4e24b908666",
             "Value": {
                 "id": "0b53d855-6cff-4f5c-a52e-8386f1aa14f6",
@@ -124,6 +116,22 @@
                 "id": "67dcd5f5-e318-4123-b391-f26bced2ff96",
                 "resourcePath": "views\\348c352a-142c-4bff-98cc-9c5b603d390a.yy",
                 "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "3a5af38c-757d-41ae-98c0-5d4b09e14e6a",
+            "Value": {
+                "id": "eaea881f-31ed-449d-a694-be64af6b5a1b",
+                "resourcePath": "options\\switch\\options_switch.yy",
+                "resourceType": "GMSwitchOptions"
+            }
+        },
+        {
+            "Key": "3a5af38c-757d-44ae-98c0-5d4b09e14e6a",
+            "Value": {
+                "id": "067cb559-7863-4fd6-895d-0681738e090a",
+                "resourcePath": "options\\ps4\\options_ps4.yy",
+                "resourceType": "GMPS4Options"
             }
         },
         {
@@ -423,6 +431,14 @@
             }
         },
         {
+            "Key": "f1684d0c-0c52-4aef-9973-3808760ece47",
+            "Value": {
+                "id": "a440ffef-c4a3-41a1-9a7c-0dac42ae4b74",
+                "resourcePath": "scripts\\__input_config\\__input_config.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "f418569b-3bdd-4706-a0e4-364317f54032",
             "Value": {
                 "id": "4c9d3fe1-d3c2-415b-a62b-bb595dfeccb3",
@@ -448,7 +464,7 @@
         }
     ],
     "script_order": [
-        "15a1ac6d-c82e-47e8-a0b1-9643e7f730a6",
+        "f1684d0c-0c52-4aef-9973-3808760ece47",
         "8376be77-3e82-4954-ae65-ce0d70f67c85",
         "a8153fcf-c12d-4d6f-93f6-3c67378e0f20",
         "f96f708b-2adc-438b-a6ab-288fad51a744",

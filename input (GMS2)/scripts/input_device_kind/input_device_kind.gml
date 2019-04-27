@@ -1,5 +1,5 @@
 /// @param player
-/// @param input_slot
+/// @param inputSlot
 //  Returns what kind of device created this input
 
 enum E_INPUT_DEVICE_KIND
