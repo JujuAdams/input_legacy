@@ -1,0 +1,1 @@
+draw_text_ext(10, 10, string(global.__input_players_array), -1, room_width-20);
