@@ -1,6 +1,6 @@
 /// @param player
 /// @param action
-/// @param index
+/// @param bindingIndex
 
 var _player = argument0;
 var _action = argument1;

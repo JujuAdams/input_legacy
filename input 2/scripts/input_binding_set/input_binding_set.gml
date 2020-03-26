@@ -1,6 +1,6 @@
 /// @param playerIndex
 /// @param action
-/// @param actionIndex
+/// @param bindingIndex
 /// @param binding
 /// @param bindingType
 
