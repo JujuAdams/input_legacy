@@ -4,7 +4,7 @@
 
 
 
-### @jujuadams, ported to GMS1 by @pudarida. analogue input by @LastLifeLeft
+### @jujuadams. Ported to GMS1 by @pudarida. Analogue input and GMS2.3.0 port by @LastLifeLeft
 
 No-frills input management library.
 
