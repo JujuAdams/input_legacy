@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Scripts",
-    "path": "folders/Scripts.yy",
+    "name": "input",
+    "path": "folders/input.yy",
   },
   "resourceVersion": "1.0",
-  "name": "name_to_key",
+  "name": "input",
   "tags": [],
   "resourceType": "GMScript",
 }
