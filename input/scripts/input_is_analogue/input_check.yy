@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Cursor",
-    "path": "folders/Input/Cursor.yy",
+    "name": "Checkers",
+    "path": "folders/Input/Checkers.yy",
   },
   "resourceVersion": "1.0",
-  "name": "input_cursor_4dir",
+  "name": "input_check",
   "tags": [],
   "resourceType": "GMScript",
 }

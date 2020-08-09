@@ -14,10 +14,17 @@ function input_tick()
 
 __input_trace("Welcome to Input by @jujuadams! This is version ", __INPUT_VERSION, ", ", __INPUT_DATE);
 
-global.__input_players        = array_create(INPUT_MAX_PLAYERS, undefined);
-global.__input_default_player = new __input_class_player();
-global.__input_frame          = 0;
-global.__input_valid_sources  = array_create(INPUT_SOURCE.__SIZE, false);
+global.__input_players         = array_create(INPUT_MAX_PLAYERS, undefined);
+global.__input_default_player  = new __input_class_player();
+global.__input_frame           = 0;
+global.__input_hotswap_mouse_x = 0;
+global.__input_hotswap_mouse_y = 0;
+global.__input_cursor_verb_u   = undefined;
+global.__input_cursor_verb_d   = undefined;
+global.__input_cursor_verb_l   = undefined;
+global.__input_cursor_verb_r   = undefined;
+global.__input_cursor_speed    = 0;
+global.__input_valid_sources   = array_create(INPUT_SOURCE.__SIZE, false);
 global.__input_valid_sources[@ INPUT_SOURCE.NONE] = true;
 
 var _p = 0;
@@ -33,11 +40,12 @@ repeat(INPUT_MAX_PLAYERS)
 
 function __input_class_player() constructor
 {
-    source  = INPUT_SOURCE.NONE;
-    gamepad = INPUT_NO_GAMEPAD;
-    sources = array_create(INPUT_SOURCE.__SIZE, undefined);
-    verbs   = {};
+    source          = INPUT_SOURCE.NONE;
+    gamepad         = INPUT_NO_GAMEPAD;
+    sources         = array_create(INPUT_SOURCE.__SIZE, undefined);
+    verbs           = {};
     last_input_time = -1;
+    cursor          = new __input_class_cursor();
     
     tick = function()
     {
@@ -50,7 +58,8 @@ function __input_class_player() constructor
                 previous_held = held;
                 
                 held  = false;
-                value = 0;
+                value = 0.0;
+                raw   = 0.0;
             }
             
             ++_v;
@@ -106,6 +115,12 @@ function __input_class_player() constructor
             
             ++_v;
         }
+        
+        with(cursor)
+        {
+            tick();
+            limit();
+        }
     }
     
     tick_source = function(_source)
@@ -118,7 +133,9 @@ function __input_class_player() constructor
             repeat(array_length(_verb_names))
             {
                 var _verb_name = _verb_names[_v];
-                var _value = 0;
+                var _raw       = 0.0;
+                var _value     = 0.0;
+                var _analogue  = undefined;
                 
                 var _alternate_array = variable_struct_get(_source_verb_struct, _verb_name);
                 var _a = 0;
@@ -129,20 +146,66 @@ function __input_class_player() constructor
                     {
                         switch(_binding.type)
                         {
-                            case "key":          if (keyboard_check(_binding.value))                _value = 1.0; break;
-                            case "gp button":    if (gamepad_button_check(gamepad, _binding.value)) _value = 1.0; break;
-                            case "mouse button": if (mouse_check_button(_binding.value))            _value = 1.0; break;
-                            case "wheel up":     if (mouse_wheel_up())                              _value = 1.0; break;
-                            case "wheel down":   if (mouse_wheel_down())                            _value = 1.0; break;
+                            case "key":
+                                if (keyboard_check(_binding.value))
+                                {
+                                    _value    = 1.0;
+                                    _raw      = 1.0;
+                                    _analogue = false;
+                                }
+                            break;
+                            
+                            case "gp button":
+                                if (gamepad_button_check(gamepad, _binding.value))
+                                {
+                                    _value    = 1.0;
+                                    _raw      = 1.0;
+                                    _analogue = false;
+                                }
+                            break;
+                            
+                            case "mouse button":
+                                if (mouse_check_button(_binding.value))
+                                {
+                                    _value    = 1.0;
+                                    _raw      = 1.0;
+                                    _analogue = false;
+                                }
+                            break;
+                            
+                            case "wheel up":
+                                if (mouse_wheel_up())
+                                {
+                                    _value    = 1.0;
+                                    _raw      = 1.0;
+                                    _analogue = false;
+                                }
+                            break;
+                            
+                            case "wheel down":
+                                if (mouse_wheel_down())
+                                {
+                                    _value    = 1.0;
+                                    _raw      = 1.0;
+                                    _analogue = false;
+                                }
+                            break;
                             
                             case "gp axis":
-                                var _found_value = gamepad_axis_value(gamepad, _binding.value);
+                                var _found_raw = gamepad_axis_value(gamepad, _binding.value);
+                                if (_binding.axis_negative) _found_raw = -_found_raw;
                                 
-                                if (_binding.axis_negative) _found_value = -_found_value;
+                                var _found_value = _found_raw;
                                 _found_value = (_found_value - INPUT_DEFAULT_MIN_THRESHOLD) / (INPUT_DEFAULT_MAX_THRESHOLD - INPUT_DEFAULT_MIN_THRESHOLD);
                                 _found_value = clamp(_found_value, 0.0, 1.0);
                                 
-                                _value = max(_value, _found_value);
+                                if (_found_raw > _raw) _raw = _found_raw;
+                                
+                                if (_found_value > _value)
+                                {
+                                    _value    = _found_value;
+                                    _analogue = true;
+                                }
                             break;
                         }
                     }
@@ -151,6 +214,8 @@ function __input_class_player() constructor
                 }
                 
                 variable_struct_get(verbs, _verb_name).value = _value;
+                variable_struct_get(verbs, _verb_name).raw   = _raw;
+                if (_analogue != undefined) variable_struct_get(verbs, _verb_name).analogue = _analogue;
                 
                 ++_v;
             }
@@ -208,10 +273,13 @@ function __input_class_player() constructor
                                     held    : false,
                                     release : false,
                                     value   : 0.0,
+                                    raw     : 0.0,
                                     
                                     press_time   : -1,
                                     held_time    : -1,
                                     release_time : -1,
+                                    
+                                    analogue : false,
                                 });
         }
         
@@ -221,9 +289,81 @@ function __input_class_player() constructor
     }
 }
 
+function __input_class_cursor() constructor
+{
+    x = 0;
+    y = 0;
+    
+    limit_l = undefined;
+    limit_t = undefined;
+    limit_r = undefined;
+    limit_b = undefined;
+    
+    limit_x = undefined;
+    limit_y = undefined;
+    limit_radius = undefined;
+    
+    tick = function()
+    {
+        if (global.__input_valid_sources[@ INPUT_SOURCE.MOUSE] && ((other.source == INPUT_SOURCE.MOUSE) || (other.source == INPUT_SOURCE.KEYBOARD_AND_MOUSE)))
+        {
+            x = mouse_x;
+            y = mouse_y;
+        }
+        else
+        {
+            if ((global.__input_cursor_verb_u != undefined)
+            &&  (global.__input_cursor_verb_d != undefined)
+            &&  (global.__input_cursor_verb_l != undefined)
+            &&  (global.__input_cursor_verb_r != undefined))
+            {
+                var _struct_u = variable_struct_get(other.verbs, global.__input_cursor_verb_u);
+                var _struct_d = variable_struct_get(other.verbs, global.__input_cursor_verb_d);
+                var _struct_l = variable_struct_get(other.verbs, global.__input_cursor_verb_l);
+                var _struct_r = variable_struct_get(other.verbs, global.__input_cursor_verb_r);
+                
+                var _dx = clamp(_struct_d.raw, 0.0, 1.0) - clamp(_struct_u.raw, 0.0, 1.0);
+                var _dy = clamp(_struct_r.raw, 0.0, 1.0) - clamp(_struct_l.raw, 0.0, 1.0);
+                
+                var _d = sqrt(_dx*_dx + _dy*_dy);
+                if (_d > 0)
+                {
+                    _d = (global.__input_cursor_speed/_d) * clamp((_d - INPUT_DEFAULT_MIN_THRESHOLD) / (INPUT_DEFAULT_MAX_THRESHOLD - INPUT_DEFAULT_MIN_THRESHOLD), 0.0, 1.0);
+                    x += _d*_dx;
+                    y += _d*_dy;
+                }
+            }
+        }
+    }
+    
+    limit = function()
+    {
+        if ((limit_l != undefined)
+        &&  (limit_t != undefined)
+        &&  (limit_r != undefined)
+        &&  (limit_b != undefined))
+        {
+            x = clamp(x, limit_l, limit_r);
+            y = clamp(y, limit_t, limit_b);
+        }
+        else if ((limit_x != undefined) && (limit_y != undefined) && (limit_radius != undefined))
+        {
+            var _dx = x - limit_x;
+            var _dy = y - limit_y;
+            var _d  = sqrt(_dx*_dx + _dy*_dy);
+            
+            if ((_d > 0) && (_d > limit_radius))
+            {
+                _d = limit_radius / _d;
+                 x = limit_x + _d*_dx;
+                 y = limit_y + _d*_dy;
+            }
+        }
+    }
+}
+
 /// @param source
 /// @param [gamepad]
-
 function __input_source_is_available()
 {
     var _source  = argument[0];
