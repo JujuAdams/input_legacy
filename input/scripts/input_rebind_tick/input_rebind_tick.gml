@@ -26,7 +26,7 @@ function input_rebind_tick()
         __input_error("Player index too large (", _player_index, " vs. ", INPUT_MAX_PLAYERS, ")\nIncrease INPUT_MAX_PLAYERS to support more players");
         return undefined;
     }
-        
+    
     if (_alternate < 0)
     {
         __input_error("Invalid \"alternate\" argument (", _alternate, ")");
@@ -41,6 +41,7 @@ function input_rebind_tick()
     
     with(global.__input_players[_player_index])
     {
+        global.__input_rebind_last_player = self;
         rebind_this_frame = true;
         
         if (rebind_state == -2)
@@ -53,17 +54,34 @@ function input_rebind_tick()
         }
         else if (rebind_state == 0)
         {
-            rebind_state   = 1;
-            rebind_source  = source;
-            rebind_gamepad = gamepad;
+            rebind_state     = 1;
+            rebind_source    = source;
+            rebind_gamepad   = gamepad;
+            rebind_verb      = _verb;
+            rebind_alternate = _alternate;
+            rebind_backup    = input_binding_get(_verb, source, _player_index, _alternate);
             
-            __input_trace("Rebinding started for player ", _player_index, " (verb=", _verb, ", alternate=", _alternate, ")");
+            __input_trace("Rebinding started for player ", _player_index, " (source=", rebind_source, ", verb=", rebind_verb, ", alternate=", rebind_alternate, "), backup=", rebind_backup);
         }
         else
         {
             if (source == INPUT_SOURCE.NONE)
             {
                 __input_trace("Rebinding failed: Source for player ", _player_index, " is INPUT_SOURCE.NONE");
+                rebind_state = -1;
+                return INPUT_REBIND_EVENT.ERROR;
+            }
+            
+            if (rebind_verb != _verb)
+            {
+                __input_trace("Rebinding failed: Target verb for player ", _player_index, " changed (from ", rebind_verb, " to ", _verb, ")");
+                rebind_state = -1;
+                return INPUT_REBIND_EVENT.ERROR;
+            }
+            
+            if (rebind_alternate != _alternate)
+            {
+                __input_trace("Rebinding failed: Target alternate for player ", _player_index, " changed (from ", rebind_alternate, " to ", _alternate, ")");
                 rebind_state = -1;
                 return INPUT_REBIND_EVENT.ERROR;
             }

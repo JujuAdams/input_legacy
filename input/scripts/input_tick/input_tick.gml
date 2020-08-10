@@ -14,18 +14,19 @@ function input_tick()
 
 __input_trace("Welcome to Input by @jujuadams! This is version ", __INPUT_VERSION, ", ", __INPUT_DATE);
 
-global.__input_players        = array_create(INPUT_MAX_PLAYERS, undefined);
-global.__input_default_player = new __input_class_player();
-global.__input_frame          = 0;
-global.__input_mouse_x        = 0;
-global.__input_mouse_y        = 0;
-global.__input_mouse_moved    = false;
-global.__input_cursor_verb_u  = undefined;
-global.__input_cursor_verb_d  = undefined;
-global.__input_cursor_verb_l  = undefined;
-global.__input_cursor_verb_r  = undefined;
-global.__input_cursor_speed   = 0;
-global.__input_valid_sources  = array_create(INPUT_SOURCE.__SIZE, false);
+global.__input_players            = array_create(INPUT_MAX_PLAYERS, undefined);
+global.__input_default_player     = new __input_class_player();
+global.__input_frame              = 0;
+global.__input_mouse_x            = 0;
+global.__input_mouse_y            = 0;
+global.__input_mouse_moved        = false;
+global.__input_cursor_verb_u      = undefined;
+global.__input_cursor_verb_d      = undefined;
+global.__input_cursor_verb_l      = undefined;
+global.__input_cursor_verb_r      = undefined;
+global.__input_cursor_speed       = 0;
+global.__input_rebind_last_player = undefined;
+global.__input_valid_sources      = array_create(INPUT_SOURCE.__SIZE, false);
 global.__input_valid_sources[@ INPUT_SOURCE.NONE] = true;
 
 var _p = 0;
@@ -47,10 +48,14 @@ function __input_class_player() constructor
     verbs             = {};
     last_input_time   = -1;
     cursor            = new __input_class_cursor();
+    
     rebind_state      = 0;
     rebind_source     = undefined;
     rebind_gamepad    = undefined;
+    rebind_verb       = undefined;
+    rebind_alternate  = undefined;
     rebind_this_frame = false;
+    rebind_backup     = undefined;
     
     tick = function()
     {

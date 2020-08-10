@@ -9,5 +9,9 @@ if (input_check_press(VERB.PAUSE))
 if (rebinding)
 {
     var _result = input_rebind_tick(VERB.RIGHT);
-    if (_result != 0) rebinding = false;
+    if (_result != 0)
+    {
+        rebinding = false;
+        input_rebind_undo();
+    }
 }
