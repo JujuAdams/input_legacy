@@ -14,17 +14,18 @@ function input_tick()
 
 __input_trace("Welcome to Input by @jujuadams! This is version ", __INPUT_VERSION, ", ", __INPUT_DATE);
 
-global.__input_players         = array_create(INPUT_MAX_PLAYERS, undefined);
-global.__input_default_player  = new __input_class_player();
-global.__input_frame           = 0;
-global.__input_hotswap_mouse_x = 0;
-global.__input_hotswap_mouse_y = 0;
-global.__input_cursor_verb_u   = undefined;
-global.__input_cursor_verb_d   = undefined;
-global.__input_cursor_verb_l   = undefined;
-global.__input_cursor_verb_r   = undefined;
-global.__input_cursor_speed    = 0;
-global.__input_valid_sources   = array_create(INPUT_SOURCE.__SIZE, false);
+global.__input_players        = array_create(INPUT_MAX_PLAYERS, undefined);
+global.__input_default_player = new __input_class_player();
+global.__input_frame          = 0;
+global.__input_mouse_x        = 0;
+global.__input_mouse_y        = 0;
+global.__input_mouse_moved    = false;
+global.__input_cursor_verb_u  = undefined;
+global.__input_cursor_verb_d  = undefined;
+global.__input_cursor_verb_l  = undefined;
+global.__input_cursor_verb_r  = undefined;
+global.__input_cursor_speed   = 0;
+global.__input_valid_sources  = array_create(INPUT_SOURCE.__SIZE, false);
 global.__input_valid_sources[@ INPUT_SOURCE.NONE] = true;
 
 var _p = 0;
@@ -40,15 +41,26 @@ repeat(INPUT_MAX_PLAYERS)
 
 function __input_class_player() constructor
 {
-    source          = INPUT_SOURCE.NONE;
-    gamepad         = INPUT_NO_GAMEPAD;
-    sources         = array_create(INPUT_SOURCE.__SIZE, undefined);
-    verbs           = {};
-    last_input_time = -1;
-    cursor          = new __input_class_cursor();
+    source            = INPUT_SOURCE.NONE;
+    gamepad           = INPUT_NO_GAMEPAD;
+    sources           = array_create(INPUT_SOURCE.__SIZE, undefined);
+    verbs             = {};
+    last_input_time   = -1;
+    cursor            = new __input_class_cursor();
+    rebind_state      = 0;
+    rebind_source     = undefined;
+    rebind_gamepad    = undefined;
+    rebind_this_frame = false;
     
     tick = function()
     {
+        global.__input_mouse_moved = (point_distance(display_mouse_get_x(), display_mouse_get_y(), global.__input_mouse_x, global.__input_mouse_y) > 5);
+        global.__input_mouse_x = display_mouse_get_x();
+        global.__input_mouse_y = display_mouse_get_y();
+        
+        if (!rebind_this_frame && (rebind_state < 0)) rebind_state = 0;
+        rebind_this_frame = false;
+        
         var _verb_names = variable_struct_get_names(verbs);
         var _v = 0;
         repeat(array_length(_verb_names))
@@ -286,6 +298,55 @@ function __input_class_player() constructor
         //Tell the system that this particular source is valid
         global.__input_valid_sources[@ _source] = true;
         if ((_source == INPUT_SOURCE.KEYBOARD) || (_source == INPUT_SOURCE.MOUSE)) global.__input_valid_sources[@ INPUT_SOURCE.KEYBOARD_AND_MOUSE] = true;
+    }
+    
+    any_input = function()
+    {
+        switch(source)
+        {
+            case INPUT_SOURCE.NONE:
+                return false;
+            break;
+            
+            case INPUT_SOURCE.KEYBOARD:
+                return keyboard_check(vk_anykey);
+            break;
+            
+            case INPUT_SOURCE.MOUSE:
+                return (global.__input_mouse_moved || mouse_check_button(mb_any) || mouse_wheel_up() || mouse_wheel_down());
+            break;
+            
+            case INPUT_SOURCE.KEYBOARD_AND_MOUSE:
+                return (keyboard_check(vk_anykey) || global.__input_mouse_moved || mouse_check_button(mb_any) || mouse_wheel_up() || mouse_wheel_down());
+            break;
+            
+            case INPUT_SOURCE.GAMEPAD:
+                if (!gamepad_is_connected(gamepad)) return false;
+                
+                return (gamepad_button_check(gamepad, gp_face1)
+                    ||  gamepad_button_check(gamepad, gp_face2)
+                    ||  gamepad_button_check(gamepad, gp_face3)
+                    ||  gamepad_button_check(gamepad, gp_face4)
+                    ||  gamepad_button_check(gamepad, gp_padu)
+                    ||  gamepad_button_check(gamepad, gp_padd)
+                    ||  gamepad_button_check(gamepad, gp_padl)
+                    ||  gamepad_button_check(gamepad, gp_padr)
+                    ||  gamepad_button_check(gamepad, gp_shoulderl)
+                    ||  gamepad_button_check(gamepad, gp_shoulderr)
+                    ||  gamepad_button_check(gamepad, gp_shoulderlb)
+                    ||  gamepad_button_check(gamepad, gp_shoulderrb)
+                    ||  gamepad_button_check(gamepad, gp_start)
+                    ||  gamepad_button_check(gamepad, gp_select)
+                    ||  gamepad_button_check(gamepad, gp_stickl)
+                    ||  gamepad_button_check(gamepad, gp_stickr)
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axislh)) > INPUT_DEFAULT_MIN_THRESHOLD)
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axislv)) > INPUT_DEFAULT_MIN_THRESHOLD)
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axisrh)) > INPUT_DEFAULT_MIN_THRESHOLD)
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axisrv)) > INPUT_DEFAULT_MIN_THRESHOLD));
+            break;
+        }
+        
+        return false;
     }
 }
 

@@ -16,10 +16,6 @@ function input_hotswap_tick()
         return undefined;
     }
     
-    var _mouse_moved = (point_distance(display_mouse_get_x(), display_mouse_get_y(), global.__input_hotswap_mouse_x, global.__input_hotswap_mouse_y) > 5);
-    global.__input_hotswap_mouse_x = display_mouse_get_x();
-    global.__input_hotswap_mouse_y = display_mouse_get_y();
-    
     with(global.__input_players[_player_index])
     {
         if ((last_input_time < 0) || (current_time - last_input_time > INPUT_HOTSWAP_DELAY))
@@ -28,7 +24,7 @@ function input_hotswap_tick()
             {
                 input_player_source_set(INPUT_NO_SEPARATE_KEYBOARD_AND_MOUSE? INPUT_SOURCE.KEYBOARD_AND_MOUSE : INPUT_SOURCE.KEYBOARD, _player_index);
             }
-            else if ((_mouse_moved || mouse_check_button(mb_any) || mouse_wheel_up() || mouse_wheel_down())
+            else if ((global.__input_mouse_moved || mouse_check_button(mb_any) || mouse_wheel_up() || mouse_wheel_down())
                  &&  __input_source_is_available(INPUT_SOURCE.MOUSE))
             {
                 input_player_source_set(INPUT_NO_SEPARATE_KEYBOARD_AND_MOUSE? INPUT_SOURCE.KEYBOARD_AND_MOUSE : INPUT_SOURCE.MOUSE, _player_index);

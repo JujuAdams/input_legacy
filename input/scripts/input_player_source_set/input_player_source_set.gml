@@ -24,7 +24,5 @@ function input_player_source_set()
         return undefined;
     }
     
-    __input_trace(_source);
-    
     global.__input_players[_player_index].source = _source;
 }
