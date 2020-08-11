@@ -1,12 +1,10 @@
 /// @param verb
 /// @param [playerIndex]
-/// @param [bufferDuration]
 
 function input_value()
 {
-    var _verb            = argument[0];
-    var _player_index    = ((argument_count > 1) && (argument[1] != undefined))? argument[1] : 0;
-    var _buffer_duration = ((argument_count > 2) && (argument[2] != undefined))? argument[2] : 0;
+    var _verb         = argument[0];
+    var _player_index = ((argument_count > 1) && (argument[1] != undefined))? argument[1] : 0;
     
     if (_player_index < 0)
     {
@@ -26,6 +24,8 @@ function input_value()
         __input_error("Verb not recognised (", _verb, ")");
         return undefined;
     }
+    
+    if (_verb_struct.consumed) return false;
     
     return _verb_struct.value;
 }

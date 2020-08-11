@@ -63,16 +63,7 @@ function input_bindings_reset()
                     repeat(array_length(_alternate_array))
                     {
                         var _binding = _alternate_array[_alternate];
-                        if (is_struct(_binding))
-                        {
-                            set_binding(_source, _verb, _alternate,
-                                        {
-                                            type          : _binding.type,
-                                            value         : _binding.value,
-                                            axis_negative : _binding.axis_negative,
-                                        });
-                        }
-                        
+                        if (is_struct(_binding)) set_binding(_source, _verb, _alternate, __input_binding_duplicate(_binding));
                         ++_alternate;
                     }
                 }

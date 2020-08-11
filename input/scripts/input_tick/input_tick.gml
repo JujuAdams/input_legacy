@@ -109,16 +109,15 @@ function __input_class_player() constructor
                 {
                     if (held)
                     {
-                        press   = true;
-                        release = false;
-                        
+                        consumed   = false;
+                        press      = true;
+                        release    = false;
                         press_time = INPUT_BUFFERED_REALTIME? current_time : global.__input_frame;
                     }
                     else
                     {
-                        press   = false;
-                        release = true;
-                        
+                        press        = false;
+                        release      = true;
                         release_time = INPUT_BUFFERED_REALTIME? current_time : global.__input_frame;
                     }
                 }
@@ -276,22 +275,7 @@ function __input_class_player() constructor
         //Set up a verb container on the player separate from the bindings
         if (!is_struct(variable_struct_get(verbs, _verb)))
         {
-            variable_struct_set(verbs, _verb,
-                                {
-                                    previous_held : false,
-                                    
-                                    press   : false,
-                                    held    : false,
-                                    release : false,
-                                    value   : 0.0,
-                                    raw     : 0.0,
-                                    
-                                    press_time   : -1,
-                                    held_time    : -1,
-                                    release_time : -1,
-                                    
-                                    analogue : false,
-                                });
+            variable_struct_set(verbs, _verb, new __input_class_verb());
         }
     }
     
@@ -372,8 +356,8 @@ function __input_class_cursor() constructor
                 var _struct_l = variable_struct_get(other.verbs, global.__input_cursor_verb_l);
                 var _struct_r = variable_struct_get(other.verbs, global.__input_cursor_verb_r);
                 
-                var _dx = clamp(_struct_d.raw, 0.0, 1.0) - clamp(_struct_u.raw, 0.0, 1.0);
-                var _dy = clamp(_struct_r.raw, 0.0, 1.0) - clamp(_struct_l.raw, 0.0, 1.0);
+                var _dx = (_struct_d.consumed? 0.0 : clamp(_struct_d.raw, 0.0, 1.0)) - (_struct_u.consumed? 0.0 : clamp(_struct_u.raw, 0.0, 1.0));
+                var _dy = (_struct_r.consumed? 0.0 : clamp(_struct_r.raw, 0.0, 1.0)) - (_struct_l.consumed? 0.0 : clamp(_struct_l.raw, 0.0, 1.0));
                 
                 var _d = sqrt(_dx*_dx + _dy*_dy);
                 if (_d > 0)
@@ -411,6 +395,38 @@ function __input_class_cursor() constructor
             }
         }
     }
+}
+
+/// @param type
+/// @param value
+/// @param axisNegative
+function __input_class_binding() constructor
+{
+    type          = argument[0];
+    value         = (argument_count > 1)? argument[1] : undefined;
+    axis_negative = (argument_count > 2)? bool(argument[2]) : undefined;
+}
+
+/// @param type
+/// @param value
+/// @param axisNegative
+function __input_class_verb() constructor
+{
+    consumed = false;
+    
+    previous_held = false;
+    
+    press   = false;
+    held    = false;
+    release = false;
+    value   = 0.0;
+    raw     = 0.0;
+    
+    press_time   = -1;
+    held_time    = -1;
+    release_time = -1;
+    
+    analogue = false;
 }
 
 /// @param source
@@ -451,6 +467,27 @@ function __input_source_is_available()
     }
     
     return true;
+}
+
+/// @param source
+function __input_binding_duplicate(_source)
+{
+    with(_source)
+    {
+        return new __input_class_binding(type, value, axis_negative);
+    }
+}
+
+/// @param from
+/// @param to
+function __input_binding_overwrite(_from, _to)
+{
+    with(_to)
+    {
+        type          = _from.type;
+        value         = _from.value;
+        axis_negative = _from.axis_negative;
+    }
 }
 
 function __input_trace()

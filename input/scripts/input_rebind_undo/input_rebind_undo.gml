@@ -19,11 +19,7 @@ function input_rebind_undo()
             if (is_struct(_binding))
             {
                 __input_trace("Rebinding undo successful (source=", rebind_source, ", verb=", rebind_verb, ", alternate=", rebind_alternate, "). Overwriting ", _binding, " with backup ", rebind_backup);
-                
-                _binding.type          = rebind_backup.type;
-                _binding.value         = rebind_backup.value;
-                _binding.axis_negative = rebind_backup.axis_negative;
-                
+                __input_binding_overwrite(rebind_backup, _binding);
                 return true;
             }
         }

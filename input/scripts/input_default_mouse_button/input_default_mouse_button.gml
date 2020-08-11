@@ -11,21 +11,13 @@ function input_default_mouse_button()
     global.__input_mouse_valid = true;
     
     global.__input_default_player.set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
-                                              {
-                                                  type          : "mouse button",
-                                                  value         : _button,
-                                                  axis_negative : undefined,
-                                              });
+                                              new __input_class_binding("mouse button", _button));
     
     var _p = 0;
     repeat(INPUT_MAX_PLAYERS)
     {
         global.__input_players[_p].set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
-                                               {
-                                                   type          : "mouse button",
-                                                   value         : _button,
-                                                   axis_negative : undefined,
-                                               });
+                                              new __input_class_binding("mouse button", _button));
         ++_p;
     }
 }

@@ -11,21 +11,13 @@ function input_default_gp_button()
     global.__input_gamepad_valid = true;
     
     global.__input_default_player.set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate,
-                                              {
-                                                  type          : "gp button",
-                                                  value         : _button,
-                                                  axis_negative : undefined,
-                                              });
+                                              new __input_class_binding("gp button", _button));
     
     var _p = 0;
     repeat(INPUT_MAX_PLAYERS)
     {
         global.__input_players[_p].set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate,
-                                               {
-                                                   type          : "gp button",
-                                                   value         : _button,
-                                                   axis_negative : undefined,
-                                               });
+                                               new __input_class_binding("gp button", _button));
         ++_p;
     }
 }

@@ -117,60 +117,34 @@ function input_rebind_tick()
             }
             else if (rebind_state == 2)
             {
+                var _success = false;
+                
                 switch(source)
                 {
                     case INPUT_SOURCE.KEYBOARD_AND_MOUSE:
                         if (keyboard_key > 0)
                         {
-                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
-                                        {
-                                            type          : "key",
-                                            value         : keyboard_key,
-                                            axis_negative : undefined,
-                                        });
-                            
+                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate, new __input_class_binding("key", keyboard_key));
                             __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to key ", keyboard_key);
-                            rebind_state = -2;
-                            return INPUT_REBIND_EVENT.SUCCESS;
+                            _success = true;
                         }
                         else if (mouse_button > 0)
                         {
-                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
-                                        {
-                                            type          : "mouse button",
-                                            value         : mouse_button,
-                                            axis_negative : undefined,
-                                        });
-                            
+                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate, new __input_class_binding("mouse button", mouse_button));
                             __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to mouse button ", mouse_button);
-                            rebind_state = -2;
-                            return INPUT_REBIND_EVENT.SUCCESS;
+                            _success = true;
                         }
                         else if (mouse_wheel_up())
                         {
-                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
-                                        {
-                                            type          : "wheel up",
-                                            value         : undefined,
-                                            axis_negative : undefined,
-                                        });
-                            
+                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate, new __input_class_binding("wheel up"));
                             __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to mouse wheel up");
-                            rebind_state = -2;
-                            return INPUT_REBIND_EVENT.SUCCESS;
+                            _success = true;
                         }
                         else if (mouse_wheel_down())
                         {
-                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
-                                        {
-                                            type          : "wheel down",
-                                            value         : undefined,
-                                            axis_negative : undefined,
-                                        });
-                            
+                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate, new __input_class_binding("wheel down"));
                             __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to mouse wheel down");
-                            rebind_state = -2;
-                            return INPUT_REBIND_EVENT.SUCCESS;
+                            _success = true;
                         }
                     break;
                     
@@ -188,16 +162,9 @@ function input_rebind_tick()
                         {
                             if (gamepad_button_check(gamepad, _button_array[_i]))
                             {
-                                set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate,
-                                            {
-                                                type          : "gp button",
-                                                value         : _button_array[_i],
-                                                axis_negative : undefined,
-                                            });
-                                
+                                set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate, new __input_class_binding("gp button", _button_array[_i]));
                                 __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to gamepad button ", _button_array[_i]);
-                                rebind_state = -2;
-                                return INPUT_REBIND_EVENT.SUCCESS;
+                                _success = true;
                             }
                             
                             ++_i;
@@ -211,21 +178,21 @@ function input_rebind_tick()
                             
                             if (abs(_value) > INPUT_DEFAULT_MIN_THRESHOLD)
                             {
-                                set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate,
-                                            {
-                                                type          : "gp axis",
-                                                value         : _axis_array[_i],
-                                                axis_negative : _negative,
-                                            });
-                                
+                                set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate, new __input_class_binding("gp axis", _axis_array[_i], _negative));
                                 __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to gamepad axis ", _button_array[_i], " (negative=", _negative, ")");
-                                rebind_state = -2;
-                                return INPUT_REBIND_EVENT.SUCCESS;
+                                _success = true;
                             }
                             
                             ++_i;
                         }
                     break;
+                }
+                
+                if (_success)
+                {
+                    input_consume(_verb, _player_index);
+                    rebind_state = -2;
+                    return INPUT_REBIND_EVENT.SUCCESS;
                 }
             }
         }

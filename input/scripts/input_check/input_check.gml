@@ -27,6 +27,8 @@ function input_check()
         return undefined;
     }
     
+    if (_verb_struct.consumed) return false;
+    
     if (_buffer_duration <= 0)
     {
         return _verb_struct.held;

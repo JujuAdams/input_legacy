@@ -35,3 +35,5 @@ input_default_gp_button(gp_padu, VERB.UP   , 1);
 input_default_gp_button(gp_padd, VERB.DOWN , 1);
 
 input_cursor_move(room_width/2, room_height/2);
+
+input_bindings_read(input_bindings_write(true));
