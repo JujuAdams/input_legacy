@@ -551,8 +551,8 @@ function __input_error()
 
 #region Internal macros
 
-#macro __INPUT_VERSION "3.0.0"
-#macro __INPUT_DATE    "2020-08-09"
+#macro __INPUT_VERSION "3.0.0.pre000"
+#macro __INPUT_DATE    "2020-08-11"
 
 enum INPUT_SOURCE
 {
