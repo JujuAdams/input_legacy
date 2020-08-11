@@ -6,7 +6,7 @@
     "path": "folders/Input/Default Bindings.yy",
   },
   "resourceVersion": "1.0",
-  "name": "input_default_gp_axis",
+  "name": "input_default_gamepad_axis",
   "tags": [],
   "resourceType": "GMScript",
 }

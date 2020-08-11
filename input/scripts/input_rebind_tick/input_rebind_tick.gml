@@ -136,13 +136,13 @@ function input_rebind_tick()
                         }
                         else if (mouse_wheel_up())
                         {
-                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate, new __input_class_binding("wheel up"));
+                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate, new __input_class_binding("mouse wheel up"));
                             __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to mouse wheel up");
                             _success = true;
                         }
                         else if (mouse_wheel_down())
                         {
-                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate, new __input_class_binding("wheel down"));
+                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate, new __input_class_binding("mouse wheel down"));
                             __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to mouse wheel down");
                             _success = true;
                         }
@@ -162,7 +162,7 @@ function input_rebind_tick()
                         {
                             if (gamepad_button_check(gamepad, _button_array[_i]))
                             {
-                                set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate, new __input_class_binding("gp button", _button_array[_i]));
+                                set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate, new __input_class_binding("gamepad button", _button_array[_i]));
                                 __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to gamepad button ", _button_array[_i]);
                                 _success = true;
                             }
@@ -179,7 +179,7 @@ function input_rebind_tick()
                             
                             if (abs(_value) > input_axis_threshold_get(_axis, _player_index).mini)
                             {
-                                set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate, new __input_class_binding("gp axis", _axis_array[_i], _negative));
+                                set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate, new __input_class_binding("gamepad axis", _axis_array[_i], _negative));
                                 __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to gamepad axis ", _button_array[_i], " (negative=", _negative, ")");
                                 _success = true;
                             }

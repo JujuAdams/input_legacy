@@ -8,4 +8,15 @@ var _string  = "Left    = " + string(input_value(VERB.LEFT   )) + "\n";
     
 draw_text(10, 10, _string);
 
-draw_circle(input_cursor_x(), input_cursor_y(), 4, true);
+var _i = 0;
+repeat(INPUT_MAX_PLAYERS)
+{
+    if (input_player_connected(_i))
+    {
+        draw_circle(input_cursor_x(_i), input_cursor_y(_i), 4, false);
+        draw_circle(input_cursor_x(_i), input_cursor_y(_i), 6, true);
+        draw_text(input_cursor_x(_i) + 5, input_cursor_y(_i) + 5, _i);
+    }
+    
+    ++_i;
+}

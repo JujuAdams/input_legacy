@@ -10,7 +10,7 @@ function input_cursor_move()
     var _max_speed    = ((argument_count > 2) && (argument[2] != undefined))? argument[2] : -1;
     var _player_index = ((argument_count > 3) && (argument[3] != undefined))? argument[3] : 0;
     
-    if (_player_index < 0)
+    if ((_player_index < 0) && (_player_index != all))
     {
         __input_error("Invalid player index provided (", _player_index, ")");
         return undefined;
@@ -22,27 +22,39 @@ function input_cursor_move()
         return undefined;
     }
     
-    with(global.__input_players[_player_index].cursor)
+    if (_player_index == all)
     {
-        if (_max_speed < 0)
+        var _i = 0;
+        repeat(INPUT_MAX_PLAYERS)
         {
-            x = _target_x;
-            y = _target_y;
+            input_cursor_move(_target_x, _target_y, _max_speed, _i);
+            ++_i;
         }
-        else
+    }
+    else
+    {
+        with(global.__input_players[_player_index].cursor)
         {
-            var _dx = _target_x - x;
-            var _dy = _target_y - y;
-            var _d  = sqrt(_dx*_dx + _dy*_dy);
-            
-            if (_d > 0)
+            if (!is_numeric(_max_speed) || (_max_speed < 0))
             {
-                _d = min(_d, _max_speed) / _d;
-                x += _d*_dx;
-                y += _d*_dy;
+                x = _target_x;
+                y = _target_y;
             }
+            else
+            {
+                var _dx = _target_x - x;
+                var _dy = _target_y - y;
+                var _d  = sqrt(_dx*_dx + _dy*_dy);
+                
+                if (_d > 0)
+                {
+                    _d = min(_d, _max_speed) / _d;
+                    x += _d*_dx;
+                    y += _d*_dy;
+                }
+            }
+            
+            limit();
         }
-        
-        limit();
     }
 }

@@ -191,7 +191,7 @@ function __input_class_player() constructor
                                 }
                             break;
                             
-                            case "gp button":
+                            case "gamepad button":
                                 if (gamepad_button_check(gamepad, _binding.value))
                                 {
                                     _value    = 1.0;
@@ -209,7 +209,7 @@ function __input_class_player() constructor
                                 }
                             break;
                             
-                            case "wheel up":
+                            case "mouse wheel up":
                                 if (mouse_wheel_up())
                                 {
                                     _value    = 1.0;
@@ -218,7 +218,7 @@ function __input_class_player() constructor
                                 }
                             break;
                             
-                            case "wheel down":
+                            case "mouse wheel down":
                                 if (mouse_wheel_down())
                                 {
                                     _value    = 1.0;
@@ -227,7 +227,7 @@ function __input_class_player() constructor
                                 }
                             break;
                             
-                            case "gp axis":
+                            case "gamepad axis":
                                 var _found_raw = gamepad_axis_value(gamepad, _binding.value);
                                 var _axis_threshold = axis_threshold_get(_binding.value);
                                 

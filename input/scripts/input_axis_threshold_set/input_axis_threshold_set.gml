@@ -24,6 +24,6 @@ function input_axis_threshold_set()
     
     with(global.__input_players[_player_index])
     {
-        return axis_threshold_set(_axis);
+        return axis_threshold_set(_axis, _min, _max);
     }
 }

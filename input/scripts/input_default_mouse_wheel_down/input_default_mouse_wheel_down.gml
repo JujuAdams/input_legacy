@@ -9,13 +9,13 @@ function input_default_mouse_wheel_down()
     global.__input_mouse_valid = true;
     
     global.__input_default_player.set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
-                                              new __input_class_binding("wheel down"));
+                                              new __input_class_binding("mouse wheel down"));
     
     var _p = 0;
     repeat(INPUT_MAX_PLAYERS)
     {
         global.__input_players[_p].set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
-                                               new __input_class_binding("wheel down"));
+                                               new __input_class_binding("mouse wheel down"));
         ++_p;
     }
 }
