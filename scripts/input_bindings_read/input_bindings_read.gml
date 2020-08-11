@@ -29,20 +29,20 @@ function input_bindings_read()
     buffer_delete(_buffer);
     buffer_delete(_cache_buffer);
     
-    var _source = _parser.root;
+    var _config = _parser.root;
     
     if (_player_index == all)
     {
         var _i = 0;
         repeat(INPUT_MAX_PLAYERS)
         {
-            global.__input_players[_i].sources = _source[_i];
+            global.__input_players[_i].config = _config[_i];
             ++_i;
         }
     }
     else
     {
-        global.__input_players[_player_index].sources = _source;
+        global.__input_players[_player_index].config = _config;
     }
 }
 

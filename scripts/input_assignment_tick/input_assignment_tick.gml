@@ -83,7 +83,8 @@ function input_assignment_tick(_min_players, _max_players, _leave_verb)
                     _abort = true;
                 }
                 
-                input_consume(all, _p);
+                //Make sure this doesn't trigger again
+                input_consume(_leave_verb, _p);
             }
         }
         

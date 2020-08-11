@@ -2,7 +2,7 @@ function input_tick()
 {
     global.__input_frame++;
     
-    global.__input_mouse_moved = (point_distance(display_mouse_get_x(), display_mouse_get_y(), global.__input_mouse_x, global.__input_mouse_y) > 5);
+    global.__input_mouse_moved = (point_distance(display_mouse_get_x(), display_mouse_get_y(), global.__input_mouse_x, global.__input_mouse_y) > 2);
     global.__input_mouse_x = display_mouse_get_x();
     global.__input_mouse_y = display_mouse_get_y();
     
@@ -18,8 +18,6 @@ function input_tick()
 
 __input_trace("Welcome to Input by @jujuadams! This is version ", __INPUT_VERSION, ", ", __INPUT_DATE);
 
-global.__input_players            = array_create(INPUT_MAX_PLAYERS, undefined);
-global.__input_default_player     = new __input_class_player();
 global.__input_frame              = 0;
 global.__input_mouse_x            = 0;
 global.__input_mouse_y            = 0;
@@ -34,6 +32,9 @@ global.__input_rebind_last_player = undefined;
 global.__input_keyboard_valid     = false;
 global.__input_mouse_valid        = false;
 global.__input_gamepad_valid      = false;
+global.__input_source_names       = ["none", "keyboard and mouse", "gamepad"];
+global.__input_players            = array_create(INPUT_MAX_PLAYERS, undefined);
+global.__input_default_player     = new __input_class_player();
 
 var _p = 0;
 repeat(INPUT_MAX_PLAYERS)
@@ -48,13 +49,13 @@ repeat(INPUT_MAX_PLAYERS)
 
 function __input_class_player() constructor
 {
-    source            = INPUT_SOURCE.NONE;
-    gamepad           = INPUT_NO_GAMEPAD;
-    sources           = array_create(INPUT_SOURCE.__SIZE, undefined);
-    verbs             = {};
-    axis_thresholds   = {};
-    last_input_time   = -1;
-    cursor            = new __input_class_cursor();
+    source          = INPUT_SOURCE.NONE;
+    gamepad         = INPUT_NO_GAMEPAD;
+    sources         = array_create(INPUT_SOURCE.__SIZE, undefined);
+    verbs           = {};
+    axis_thresholds = {};
+    last_input_time = -1;
+    cursor          = new __input_class_cursor();
     
     rebind_state      = 0;
     rebind_source     = undefined;
@@ -64,16 +65,18 @@ function __input_class_player() constructor
     rebind_this_frame = false;
     rebind_backup     = undefined;
     
+    config = { axis_thresholds : {} };
+    
     /// @param axis
     /// @param min
     /// @param max
     axis_threshold_set = function(_axis, _min, _max)
     {
-        var _axis_struct = variable_struct_get(axis_thresholds, _axis);
+        var _axis_struct = variable_struct_get(config.axis_thresholds, _axis);
         if (!is_struct(_axis_struct))
         {
             _axis_struct = {};
-            variable_struct_set(axis_thresholds, _axis, _axis_struct);
+            variable_struct_set(config.axis_thresholds, _axis, _axis_struct);
         }
         
         _axis_struct.mini = _min
@@ -84,7 +87,7 @@ function __input_class_player() constructor
     /// @param axis
     axis_threshold_get = function(_axis)
     {
-        var _struct = variable_struct_get(axis_thresholds, _axis);
+        var _struct = variable_struct_get(config.axis_thresholds, _axis);
         if (is_struct(_struct)) return _struct;
         return axis_threshold_set(_axis, INPUT_DEFAULT_MIN_THRESHOLD, INPUT_DEFAULT_MAX_THRESHOLD);
     }
@@ -110,7 +113,7 @@ function __input_class_player() constructor
             ++_v;
         }
         
-        tick_source(source);
+        tick_source(global.__input_source_names[source]);
         
         var _verb_names = variable_struct_get_names(verbs);
         var _v = 0;
@@ -161,7 +164,7 @@ function __input_class_player() constructor
     
     tick_source = function(_source)
     {
-        var _source_verb_struct = sources[_source];
+        var _source_verb_struct = variable_struct_get(config, _source);
         if (is_struct(_source_verb_struct))
         {
             var _verb_names = variable_struct_get_names(_source_verb_struct);
@@ -284,15 +287,15 @@ function __input_class_player() constructor
             return undefined;
         }
         
-        var _source_verb_struct = sources[_source];
-        if (_source_verb_struct == undefined)
+        var _source_verb_struct = variable_struct_get(config, global.__input_source_names[_source]);
+        if (!is_struct(_source_verb_struct))
         {
             _source_verb_struct = {};
-            sources[@ _source] = _source_verb_struct;
+            variable_struct_set(config, global.__input_source_names[_source], _source_verb_struct);
         }
         
         var _verb_alternate_array = variable_struct_get(_source_verb_struct, _verb);
-        if (_verb_alternate_array == undefined)
+        if (!is_array(_verb_alternate_array))
         {
             _verb_alternate_array = array_create(INPUT_MAX_ALTERNATE_BINDINGS, undefined);
             variable_struct_set(_source_verb_struct, _verb, _verb_alternate_array);

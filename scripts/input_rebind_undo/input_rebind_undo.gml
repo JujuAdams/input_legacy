@@ -6,7 +6,7 @@ function input_rebind_undo()
         {
             var _binding = undefined;
             
-            var _source_verb_struct = sources[rebind_source];
+            var _source_verb_struct = variable_struct_get(config, global.__input_source_names[rebind_source]);
             if (is_struct(_source_verb_struct))
             {
                 var _alternate_array = variable_struct_get(_source_verb_struct, rebind_verb);

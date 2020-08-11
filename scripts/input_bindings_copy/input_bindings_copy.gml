@@ -52,7 +52,7 @@ function input_bindings_copy(_player_index_s, _player_index_d)
 		var _source = 0;
 		repeat(INPUT_SOURCE.__SIZE)
 		{
-	        var _source_verb_struct = _player_s.sources[_source];
+	        var _source_verb_struct = variable_struct_get(_player_s.config, global.__input_source_names[_source]);
 	        if (is_struct(_source_verb_struct))
 	        {
 	            var _verb_names = variable_struct_get_names(_source_verb_struct);

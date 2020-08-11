@@ -46,9 +46,9 @@ function input_bindings_reset()
     
     with(global.__input_players[_player_index])
     {
-        sources[_source] = undefined;
+        config = {};
         
-        var _source_verb_struct = global.__input_default_player.sources[_source];
+        var _source_verb_struct = variable_struct_get(global.__input_default_player.config, global.__input_source_names[_source]);
         if (is_struct(_source_verb_struct))
         {
             var _verb_names = variable_struct_get_names(_source_verb_struct);

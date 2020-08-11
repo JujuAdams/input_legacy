@@ -1,2 +1,2 @@
 input_tick();
-input_assignment_tick(2, 2, VERB.CANCEL);
+input_hotswap_tick();

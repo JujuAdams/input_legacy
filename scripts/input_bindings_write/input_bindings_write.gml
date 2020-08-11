@@ -18,25 +18,24 @@ function input_bindings_write()
         return undefined;
     }
     
-    var _source = undefined;
+    var _config = undefined;
     
     if (_player_index == all)
     {
-        var _source = array_create(INPUT_MAX_PLAYERS, undefined);
-        
+        var _config = array_create(INPUT_MAX_PLAYERS, undefined);
         var _i = 0;
         repeat(INPUT_MAX_PLAYERS)
         {
-            _source[@ _i] = global.__input_players[_i].sources;
+            _config[@ _i] = global.__input_players[_i].config;
             ++_i;
         }
     }
     else
     {
-        _source = global.__input_players[_player_index].sources;
+        _config = global.__input_players[_player_index].config;
     }
     
-    return (new __input_bindings_write_parser(_source, _pretty)).result;
+    return (new __input_bindings_write_parser(_config, _pretty)).result;
 }
 
 function __input_bindings_write_parser(_ds, _pretty) constructor
