@@ -10,6 +10,8 @@ function input_default_gp_axis()
     var _verb      = argument[2];
     var _alternate = ((argument_count > 3) && (argument[3] != undefined))? argument[3] : 0;
     
+    global.__input_gamepad_valid = true;
+    
     global.__input_default_player.set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate,
                                               {
                                                   type          : "gp axis",

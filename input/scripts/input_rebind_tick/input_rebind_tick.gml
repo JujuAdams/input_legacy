@@ -119,68 +119,10 @@ function input_rebind_tick()
             {
                 switch(source)
                 {
-                    case INPUT_SOURCE.KEYBOARD:
-                        if (keyboard_key > 0)
-                        {
-                            set_binding(INPUT_SOURCE.KEYBOARD, _verb, _alternate,
-                                        {
-                                            type          : "key",
-                                            value         : keyboard_key,
-                                            axis_negative : undefined,
-                                        });
-                            
-                            __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to key ", keyboard_key);
-                            rebind_state = -2;
-                            return INPUT_REBIND_EVENT.SUCCESS;
-                        }
-                    break;
-                    
-                    case INPUT_SOURCE.MOUSE:
-                        if (mouse_button > 0)
-                        {
-                            set_binding(INPUT_SOURCE.MOUSE, _verb, _alternate,
-                                        {
-                                            type          : "mouse button",
-                                            value         : mouse_button,
-                                            axis_negative : undefined,
-                                        });
-                            
-                            __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to mouse button ", mouse_button);
-                            rebind_state = -2;
-                            return INPUT_REBIND_EVENT.SUCCESS;
-                        }
-                        else if (mouse_wheel_up())
-                        {
-                            set_binding(INPUT_SOURCE.MOUSE, _verb, _alternate,
-                                        {
-                                            type          : "wheel up",
-                                            value         : undefined,
-                                            axis_negative : undefined,
-                                        });
-                            
-                            __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to mouse wheel up");
-                            rebind_state = -2;
-                            return INPUT_REBIND_EVENT.SUCCESS;
-                        }
-                        else if (mouse_wheel_down())
-                        {
-                            set_binding(INPUT_SOURCE.MOUSE, _verb, _alternate,
-                                        {
-                                            type          : "wheel down",
-                                            value         : undefined,
-                                            axis_negative : undefined,
-                                        });
-                            
-                            __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to mouse wheel down");
-                            rebind_state = -2;
-                            return INPUT_REBIND_EVENT.SUCCESS;
-                        }
-                    break;
-                    
                     case INPUT_SOURCE.KEYBOARD_AND_MOUSE:
                         if (keyboard_key > 0)
                         {
-                            set_binding(INPUT_SOURCE.KEYBOARD, _verb, _alternate,
+                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
                                         {
                                             type          : "key",
                                             value         : keyboard_key,
@@ -193,7 +135,7 @@ function input_rebind_tick()
                         }
                         else if (mouse_button > 0)
                         {
-                            set_binding(INPUT_SOURCE.MOUSE, _verb, _alternate,
+                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
                                         {
                                             type          : "mouse button",
                                             value         : mouse_button,
@@ -206,7 +148,7 @@ function input_rebind_tick()
                         }
                         else if (mouse_wheel_up())
                         {
-                            set_binding(INPUT_SOURCE.MOUSE, _verb, _alternate,
+                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
                                         {
                                             type          : "wheel up",
                                             value         : undefined,
@@ -219,7 +161,7 @@ function input_rebind_tick()
                         }
                         else if (mouse_wheel_down())
                         {
-                            set_binding(INPUT_SOURCE.MOUSE, _verb, _alternate,
+                            set_binding(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _verb, _alternate,
                                         {
                                             type          : "wheel down",
                                             value         : undefined,

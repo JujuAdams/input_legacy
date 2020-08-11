@@ -8,6 +8,8 @@ function input_default_gp_button()
     var _verb      = argument[1];
     var _alternate = ((argument_count > 2) && (argument[2] != undefined))? argument[2] : 0;
     
+    global.__input_gamepad_valid = true;
+    
     global.__input_default_player.set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate,
                                               {
                                                   type          : "gp button",

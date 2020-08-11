@@ -18,11 +18,5 @@ function input_player_source_set()
         return undefined;
     }
     
-    if (INPUT_NO_SEPARATE_KEYBOARD_AND_MOUSE && ((_source == INPUT_SOURCE.KEYBOARD) || (_source == INPUT_SOURCE.MOUSE)))
-    {
-        __input_error("INPUT_SOURCE.KEYBOARD and INPUT_SOURCE.MOUSE have been disabled\n(Set INPUT_NO_SEPARATE_KEYBOARD_AND_MOUSE to <false> to enable them)\n");
-        return undefined;
-    }
-    
     global.__input_players[_player_index].source = _source;
 }

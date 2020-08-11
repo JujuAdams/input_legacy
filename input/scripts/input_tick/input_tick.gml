@@ -25,9 +25,11 @@ global.__input_cursor_verb_d      = undefined;
 global.__input_cursor_verb_l      = undefined;
 global.__input_cursor_verb_r      = undefined;
 global.__input_cursor_speed       = 0;
+global.__input_cursor_using_mouse = true;
 global.__input_rebind_last_player = undefined;
-global.__input_valid_sources      = array_create(INPUT_SOURCE.__SIZE, false);
-global.__input_valid_sources[@ INPUT_SOURCE.NONE] = true;
+global.__input_keyboard_valid     = false;
+global.__input_mouse_valid        = false;
+global.__input_gamepad_valid      = false;
 
 var _p = 0;
 repeat(INPUT_MAX_PLAYERS)
@@ -82,15 +84,7 @@ function __input_class_player() constructor
             ++_v;
         }
         
-        if (source == INPUT_SOURCE.KEYBOARD_AND_MOUSE)
-        {
-            tick_source(INPUT_SOURCE.KEYBOARD);
-            tick_source(INPUT_SOURCE.MOUSE);
-        }
-        else
-        {
-            tick_source(source);
-        }
+        tick_source(source);
         
         var _verb_names = variable_struct_get_names(verbs);
         var _v = 0;
@@ -299,10 +293,6 @@ function __input_class_player() constructor
                                     analogue : false,
                                 });
         }
-        
-        //Tell the system that this particular source is valid
-        global.__input_valid_sources[@ _source] = true;
-        if ((_source == INPUT_SOURCE.KEYBOARD) || (_source == INPUT_SOURCE.MOUSE)) global.__input_valid_sources[@ INPUT_SOURCE.KEYBOARD_AND_MOUSE] = true;
     }
     
     any_input = function()
@@ -311,14 +301,6 @@ function __input_class_player() constructor
         {
             case INPUT_SOURCE.NONE:
                 return false;
-            break;
-            
-            case INPUT_SOURCE.KEYBOARD:
-                return keyboard_check(vk_anykey);
-            break;
-            
-            case INPUT_SOURCE.MOUSE:
-                return (global.__input_mouse_moved || mouse_check_button(mb_any) || mouse_wheel_up() || mouse_wheel_down());
             break;
             
             case INPUT_SOURCE.KEYBOARD_AND_MOUSE:
@@ -371,12 +353,14 @@ function __input_class_cursor() constructor
     
     tick = function()
     {
-        if (global.__input_valid_sources[@ INPUT_SOURCE.MOUSE] && ((other.source == INPUT_SOURCE.MOUSE) || (other.source == INPUT_SOURCE.KEYBOARD_AND_MOUSE)))
+        if (global.__input_mouse_valid && (other.source == INPUT_SOURCE.KEYBOARD_AND_MOUSE) && (global.__input_mouse_moved || global.__input_cursor_using_mouse))
         {
+            global.__input_cursor_using_mouse = true;
             x = mouse_x;
             y = mouse_y;
         }
-        else
+        
+        if (!global.__input_mouse_moved)
         {
             if ((global.__input_cursor_verb_u != undefined)
             &&  (global.__input_cursor_verb_d != undefined)
@@ -394,6 +378,7 @@ function __input_class_cursor() constructor
                 var _d = sqrt(_dx*_dx + _dy*_dy);
                 if (_d > 0)
                 {
+                    global.__input_cursor_using_mouse = false;
                     _d = (global.__input_cursor_speed/_d) * clamp((_d - INPUT_DEFAULT_MIN_THRESHOLD) / (INPUT_DEFAULT_MAX_THRESHOLD - INPUT_DEFAULT_MIN_THRESHOLD), 0.0, 1.0);
                     x += _d*_dx;
                     y += _d*_dy;
@@ -435,8 +420,6 @@ function __input_source_is_available()
     var _source  = argument[0];
     var _gamepad = ((argument_count > 1) && (argument[1] != undefined))? argument[1] : INPUT_NO_GAMEPAD;
     
-    if (!global.__input_valid_sources[_source]) return false;
-    
     switch(_source)
     {
         case INPUT_SOURCE.NONE:
@@ -444,6 +427,7 @@ function __input_source_is_available()
         break;
         
         case INPUT_SOURCE.GAMEPAD:
+            if (!global.__input_gamepad_valid) return false;
             if (_gamepad == INPUT_NO_GAMEPAD) return true;
             
             var _p = 0;
@@ -454,51 +438,13 @@ function __input_source_is_available()
             }
         break;
         
-        case INPUT_SOURCE.KEYBOARD:
-            var _p = 0;
-            repeat(INPUT_MAX_PLAYERS)
-            {
-                var _other_source = global.__input_players[_p].source;
-                
-                if ((_other_source == INPUT_SOURCE.KEYBOARD)
-                ||  (_other_source == INPUT_SOURCE.KEYBOARD_AND_MOUSE))
-                {
-                    return false;
-                }
-                
-                ++_p;
-            }
-        break;
-        
-        case INPUT_SOURCE.MOUSE:
-            var _p = 0;
-            repeat(INPUT_MAX_PLAYERS)
-            {
-                var _other_source = global.__input_players[_p].source;
-                
-                if ((_other_source == INPUT_SOURCE.MOUSE)
-                ||  (_other_source == INPUT_SOURCE.KEYBOARD_AND_MOUSE))
-                {
-                    return false;
-                }
-                
-                ++_p;
-            }
-        break;
-        
         case INPUT_SOURCE.KEYBOARD_AND_MOUSE:
+            if (!global.__input_keyboard_valid && !global.__input_mouse_valid) return false;
+            
             var _p = 0;
             repeat(INPUT_MAX_PLAYERS)
             {
-                var _other_source = global.__input_players[_p].source;
-                
-                if ((_other_source == INPUT_SOURCE.KEYBOARD)
-                ||  (_other_source == INPUT_SOURCE.MOUSE)
-                ||  (_other_source == INPUT_SOURCE.KEYBOARD_AND_MOUSE))
-                {
-                    return false;
-                }
-                
+                if (global.__input_players[_p].source == INPUT_SOURCE.KEYBOARD_AND_MOUSE) return false;
                 ++_p;
             }
         break;
@@ -543,8 +489,6 @@ function __input_error()
 enum INPUT_SOURCE
 {
     NONE,
-    KEYBOARD,
-    MOUSE,
     KEYBOARD_AND_MOUSE,
     GAMEPAD,
     __SIZE

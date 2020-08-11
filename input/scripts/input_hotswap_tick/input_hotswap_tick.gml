@@ -20,16 +20,16 @@ function input_hotswap_tick()
     {
         if ((last_input_time < 0) || (current_time - last_input_time > INPUT_HOTSWAP_DELAY))
         {
-            if (keyboard_check(vk_anykey) && __input_source_is_available(INPUT_SOURCE.KEYBOARD))
+            if (global.__input_keyboard_valid && __input_source_is_available(INPUT_SOURCE.KEYBOARD_AND_MOUSE) && keyboard_check(vk_anykey))
             {
-                input_player_source_set(INPUT_NO_SEPARATE_KEYBOARD_AND_MOUSE? INPUT_SOURCE.KEYBOARD_AND_MOUSE : INPUT_SOURCE.KEYBOARD, _player_index);
+                input_player_source_set(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _player_index);
             }
-            else if ((global.__input_mouse_moved || mouse_check_button(mb_any) || mouse_wheel_up() || mouse_wheel_down())
-                 &&  __input_source_is_available(INPUT_SOURCE.MOUSE))
+            else if (global.__input_mouse_valid && __input_source_is_available(INPUT_SOURCE.KEYBOARD_AND_MOUSE)
+                 && (global.__input_mouse_moved || mouse_check_button(mb_any) || mouse_wheel_up() || mouse_wheel_down()))
             {
-                input_player_source_set(INPUT_NO_SEPARATE_KEYBOARD_AND_MOUSE? INPUT_SOURCE.KEYBOARD_AND_MOUSE : INPUT_SOURCE.MOUSE, _player_index);
+                input_player_source_set(INPUT_SOURCE.KEYBOARD_AND_MOUSE, _player_index);
             }
-            else
+            else if (global.__input_gamepad_valid)
             {
                 var _g = 0;
                 repeat(gamepad_get_device_count())
