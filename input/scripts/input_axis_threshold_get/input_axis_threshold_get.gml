@@ -18,8 +18,8 @@ function input_axis_threshold_get()
         return undefined;
     }
     
-    var _struct = variable_struct_get(global.__input_players[_player_index].axis_thresholds, _axis);
-    if (is_struct(_struct)) return _struct;
-    
-    return input_axis_threshold_set(_axis, INPUT_DEFAULT_MIN_THRESHOLD, INPUT_DEFAULT_MAX_THRESHOLD, _player_index);
+    with(global.__input_players[_player_index])
+    {
+        return axis_threshold_get(_axis);
+    }
 }

@@ -2,6 +2,10 @@ function input_tick()
 {
     global.__input_frame++;
     
+    global.__input_mouse_moved = (point_distance(display_mouse_get_x(), display_mouse_get_y(), global.__input_mouse_x, global.__input_mouse_y) > 5);
+    global.__input_mouse_x = display_mouse_get_x();
+    global.__input_mouse_y = display_mouse_get_y();
+    
     var _p = 0;
     repeat(INPUT_MAX_PLAYERS)
     {
@@ -34,7 +38,7 @@ global.__input_gamepad_valid      = false;
 var _p = 0;
 repeat(INPUT_MAX_PLAYERS)
 {
-    global.__input_players[@ _p] = new __input_class_player(_p);
+    global.__input_players[@ _p] = new __input_class_player();
     ++_p;
 }
 
@@ -42,9 +46,8 @@ repeat(INPUT_MAX_PLAYERS)
 
 #region Utility
 
-function __input_class_player(_player_index) constructor
+function __input_class_player() constructor
 {
-    player_index      = _player_index;
     source            = INPUT_SOURCE.NONE;
     gamepad           = INPUT_NO_GAMEPAD;
     sources           = array_create(INPUT_SOURCE.__SIZE, undefined);
@@ -61,12 +64,33 @@ function __input_class_player(_player_index) constructor
     rebind_this_frame = false;
     rebind_backup     = undefined;
     
+    /// @param axis
+    /// @param min
+    /// @param max
+    axis_threshold_set = function(_axis, _min, _max)
+    {
+        var _axis_struct = variable_struct_get(axis_thresholds, _axis);
+        if (!is_struct(_axis_struct))
+        {
+            _axis_struct = {};
+            variable_struct_set(axis_thresholds, _axis, _axis_struct);
+        }
+        
+        _axis_struct.mini = _min
+        _axis_struct.maxi = _max;
+        return _axis_struct;
+    }
+    
+    /// @param axis
+    axis_threshold_get = function(_axis)
+    {
+        var _struct = variable_struct_get(axis_thresholds, _axis);
+        if (is_struct(_struct)) return _struct;
+        return axis_threshold_set(_axis, INPUT_DEFAULT_MIN_THRESHOLD, INPUT_DEFAULT_MAX_THRESHOLD);
+    }
+    
     tick = function()
     {
-        global.__input_mouse_moved = (point_distance(display_mouse_get_x(), display_mouse_get_y(), global.__input_mouse_x, global.__input_mouse_y) > 5);
-        global.__input_mouse_x = display_mouse_get_x();
-        global.__input_mouse_y = display_mouse_get_y();
-        
         if (!rebind_this_frame && (rebind_state < 0)) rebind_state = 0;
         rebind_this_frame = false;
         
@@ -205,7 +229,7 @@ function __input_class_player(_player_index) constructor
                             
                             case "gp axis":
                                 var _found_raw = gamepad_axis_value(gamepad, _binding.value);
-                                var _axis_threshold = input_axis_threshold_get(_binding.value, player_index);
+                                var _axis_threshold = axis_threshold_get(_binding.value);
                                 
                                 if (_binding.axis_negative) _found_raw = -_found_raw;
                                 
@@ -314,10 +338,10 @@ function __input_class_player(_player_index) constructor
                     ||  gamepad_button_check(gamepad, gp_select)
                     ||  gamepad_button_check(gamepad, gp_stickl)
                     ||  gamepad_button_check(gamepad, gp_stickr)
-                    ||  (abs(gamepad_axis_value(gamepad, gp_axislh)) > input_axis_threshold_get(gp_axislh, player_index))
-                    ||  (abs(gamepad_axis_value(gamepad, gp_axislv)) > input_axis_threshold_get(gp_axislv, player_index))
-                    ||  (abs(gamepad_axis_value(gamepad, gp_axisrh)) > input_axis_threshold_get(gp_axisrh, player_index))
-                    ||  (abs(gamepad_axis_value(gamepad, gp_axisrv)) > input_axis_threshold_get(gp_axisrv, player_index)));
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axislh)) > axis_threshold_get(gp_axislh))
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axislv)) > axis_threshold_get(gp_axislv))
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axisrh)) > axis_threshold_get(gp_axisrh))
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axisrv)) > axis_threshold_get(gp_axisrv)));
             break;
         }
         
@@ -492,6 +516,57 @@ function __input_binding_overwrite(_from, _to)
         value         = _from.value;
         axis_negative = _from.axis_negative;
     }
+}
+
+/// @param playerIndex
+function __input_any_new_device_input(_player_index)
+{
+    if (global.__input_keyboard_valid && __input_source_is_available(INPUT_SOURCE.KEYBOARD_AND_MOUSE) && keyboard_check(vk_anykey))
+    {
+        return { source : INPUT_SOURCE.KEYBOARD_AND_MOUSE, gamepad : undefined };
+    }
+    else if (global.__input_mouse_valid && __input_source_is_available(INPUT_SOURCE.KEYBOARD_AND_MOUSE)
+            && (global.__input_mouse_moved || mouse_check_button(mb_any) || mouse_wheel_up() || mouse_wheel_down()))
+    {
+        return { source : INPUT_SOURCE.KEYBOARD_AND_MOUSE, gamepad : undefined };
+    }
+    else if (global.__input_gamepad_valid)
+    {
+        var _g = 0;
+        repeat(gamepad_get_device_count())
+        {
+            if (gamepad_is_connected(_g) && __input_source_is_available(INPUT_SOURCE.GAMEPAD, _g))
+            {
+                if (gamepad_button_check(_g, gp_face1)
+                ||  gamepad_button_check(_g, gp_face2)
+                ||  gamepad_button_check(_g, gp_face3)
+                ||  gamepad_button_check(_g, gp_face4)
+                ||  gamepad_button_check(_g, gp_padu)
+                ||  gamepad_button_check(_g, gp_padd)
+                ||  gamepad_button_check(_g, gp_padl)
+                ||  gamepad_button_check(_g, gp_padr)
+                ||  gamepad_button_check(_g, gp_shoulderl)
+                ||  gamepad_button_check(_g, gp_shoulderr)
+                ||  gamepad_button_check(_g, gp_shoulderlb)
+                ||  gamepad_button_check(_g, gp_shoulderrb)
+                ||  gamepad_button_check(_g, gp_start)
+                ||  gamepad_button_check(_g, gp_select)
+                ||  gamepad_button_check(_g, gp_stickl)
+                ||  gamepad_button_check(_g, gp_stickr)
+                ||  (abs(gamepad_axis_value(_g, gp_axislh)) > input_axis_threshold_get(gp_axislh, _player_index).mini)
+                ||  (abs(gamepad_axis_value(_g, gp_axislv)) > input_axis_threshold_get(gp_axislv, _player_index).mini)
+                ||  (abs(gamepad_axis_value(_g, gp_axisrh)) > input_axis_threshold_get(gp_axisrh, _player_index).mini)
+                ||  (abs(gamepad_axis_value(_g, gp_axisrv)) > input_axis_threshold_get(gp_axisrv, _player_index).mini))
+                {
+                    return { source : INPUT_SOURCE.GAMEPAD, gamepad : _g };
+                }
+            }
+                    
+            ++_g;
+        }
+    }
+    
+    return { source: INPUT_SOURCE.NONE, gamepad : INPUT_NO_GAMEPAD };
 }
 
 function __input_trace()

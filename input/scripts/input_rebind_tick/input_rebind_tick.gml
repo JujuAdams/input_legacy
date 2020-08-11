@@ -177,7 +177,7 @@ function input_rebind_tick()
                             var _value    = gamepad_axis_value(gamepad, _axis);
                             var _negative = (_value < 0);
                             
-                            if (abs(_value) > input_axis_threshold_get(_axis, _player_index))
+                            if (abs(_value) > input_axis_threshold_get(_axis, _player_index).mini)
                             {
                                 set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate, new __input_class_binding("gp axis", _axis_array[_i], _negative));
                                 __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to gamepad axis ", _button_array[_i], " (negative=", _negative, ")");

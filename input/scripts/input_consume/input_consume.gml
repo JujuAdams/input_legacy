@@ -18,16 +18,29 @@ function input_consume()
         return undefined;
     }
     
-    var _verb_struct = variable_struct_get(global.__input_players[_player_index].verbs, _verb);
-    if (!is_struct(_verb_struct))
+    if (_verb == all)
     {
-        __input_error("Verb not recognised (", _verb, ")");
-        return undefined;
+        var _verb_names = variable_struct_get_names(global.__input_players[_player_index].verbs);
+        var _v = 0;
+        repeat(array_length(_verb_names))
+        {
+            input_consume(_verb_names[_v], _player_index);
+            ++_v;
+        }
     }
-    
-    with(_verb_struct)
+    else
     {
-        consumed      = true;
-        previous_held = true; //Force the held state on to avoid unwanted early reset of a consumed verb
+        var _verb_struct = variable_struct_get(global.__input_players[_player_index].verbs, _verb);
+        if (!is_struct(_verb_struct))
+        {
+            __input_error("Verb not recognised (", _verb, ")");
+            return undefined;
+        }
+        
+        with(_verb_struct)
+        {
+            consumed      = true;
+            previous_held = true; //Force the held state on to avoid unwanted early reset of a consumed verb
+        }
     }
 }

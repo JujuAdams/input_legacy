@@ -22,16 +22,8 @@ function input_axis_threshold_set()
         return undefined;
     }
     
-    var _axis_thresholds = global.__input_players[_player_index].axis_thresholds;
-    
-    var _axis_struct = variable_struct_get(_axis_thresholds, _axis);
-    if (!is_struct(_axis_struct))
+    with(global.__input_players[_player_index])
     {
-        _axis_struct = {};
-        variable_struct_set(_axis_thresholds, _axis, _axis_struct);
+        return axis_threshold_set(_axis);
     }
-    
-    _axis_struct.mini = _min
-    _axis_struct.maxi = _max;
-    return _axis_struct;
 }
