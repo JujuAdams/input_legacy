@@ -1,5 +1,37 @@
-// Script assets have changed for v2.3.0 see
-// https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
-function Script36(){
+/// @param axis
+/// @param min
+/// @param max
+/// @param [playerIndex]
 
+function input_axis_threshold_set()
+{
+    var _axis         = argument[0];
+    var _min          = argument[1];
+    var _max          = argument[2];
+    var _player_index = ((argument_count > 3) && (argument[3] != undefined))? argument[3] : 0;
+    
+    if (_player_index < 0)
+    {
+        __input_error("Invalid player index provided (", _player_index, ")");
+        return undefined;
+    }
+    
+    if (_player_index >= INPUT_MAX_PLAYERS)
+    {
+        __input_error("Player index too large (", _player_index, " vs. ", INPUT_MAX_PLAYERS, ")\nIncrease INPUT_MAX_PLAYERS to support more players");
+        return undefined;
+    }
+    
+    var _axis_thresholds = global.__input_players[_player_index].axis_thresholds;
+    
+    var _axis_struct = variable_struct_get(_axis_thresholds, _axis);
+    if (!is_struct(_axis_struct))
+    {
+        _axis_struct = {};
+        variable_struct_set(_axis_thresholds, _axis, _axis_struct);
+    }
+    
+    _axis_struct.mini = _min
+    _axis_struct.maxi = _max;
+    return _axis_struct;
 }

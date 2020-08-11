@@ -34,7 +34,7 @@ global.__input_gamepad_valid      = false;
 var _p = 0;
 repeat(INPUT_MAX_PLAYERS)
 {
-    global.__input_players[@ _p] = new __input_class_player();
+    global.__input_players[@ _p] = new __input_class_player(_p);
     ++_p;
 }
 
@@ -42,12 +42,14 @@ repeat(INPUT_MAX_PLAYERS)
 
 #region Utility
 
-function __input_class_player() constructor
+function __input_class_player(_player_index) constructor
 {
+    player_index      = _player_index;
     source            = INPUT_SOURCE.NONE;
     gamepad           = INPUT_NO_GAMEPAD;
     sources           = array_create(INPUT_SOURCE.__SIZE, undefined);
     verbs             = {};
+    axis_thresholds   = {};
     last_input_time   = -1;
     cursor            = new __input_class_cursor();
     
@@ -203,10 +205,12 @@ function __input_class_player() constructor
                             
                             case "gp axis":
                                 var _found_raw = gamepad_axis_value(gamepad, _binding.value);
+                                var _axis_threshold = input_axis_threshold_get(_binding.value, player_index);
+                                
                                 if (_binding.axis_negative) _found_raw = -_found_raw;
                                 
                                 var _found_value = _found_raw;
-                                _found_value = (_found_value - INPUT_DEFAULT_MIN_THRESHOLD) / (INPUT_DEFAULT_MAX_THRESHOLD - INPUT_DEFAULT_MIN_THRESHOLD);
+                                _found_value = (_found_value - _axis_threshold.mini) / (_axis_threshold.maxi - _axis_threshold.mini);
                                 _found_value = clamp(_found_value, 0.0, 1.0);
                                 
                                 if (_found_raw > _raw) _raw = _found_raw;
@@ -310,10 +314,10 @@ function __input_class_player() constructor
                     ||  gamepad_button_check(gamepad, gp_select)
                     ||  gamepad_button_check(gamepad, gp_stickl)
                     ||  gamepad_button_check(gamepad, gp_stickr)
-                    ||  (abs(gamepad_axis_value(gamepad, gp_axislh)) > INPUT_DEFAULT_MIN_THRESHOLD)
-                    ||  (abs(gamepad_axis_value(gamepad, gp_axislv)) > INPUT_DEFAULT_MIN_THRESHOLD)
-                    ||  (abs(gamepad_axis_value(gamepad, gp_axisrh)) > INPUT_DEFAULT_MIN_THRESHOLD)
-                    ||  (abs(gamepad_axis_value(gamepad, gp_axisrv)) > INPUT_DEFAULT_MIN_THRESHOLD));
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axislh)) > input_axis_threshold_get(gp_axislh, player_index))
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axislv)) > input_axis_threshold_get(gp_axislv, player_index))
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axisrh)) > input_axis_threshold_get(gp_axisrh, player_index))
+                    ||  (abs(gamepad_axis_value(gamepad, gp_axisrv)) > input_axis_threshold_get(gp_axisrv, player_index)));
             break;
         }
         

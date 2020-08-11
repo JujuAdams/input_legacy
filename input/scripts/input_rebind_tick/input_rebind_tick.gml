@@ -155,7 +155,7 @@ function input_rebind_tick()
                                                 gp_start, gp_select, gp_stickl, gp_stickr];
                         
                         var _axis_array = [gp_axislh, gp_axislv, gp_axisrh, gp_axisrv,
-                                            gp_shoulderlb, gp_shoulderrb];
+                                           gp_shoulderlb, gp_shoulderrb];
                         
                         var _i = 0;
                         repeat(array_length(_button_array))
@@ -173,10 +173,11 @@ function input_rebind_tick()
                         var _i = 0;
                         repeat(array_length(_axis_array))
                         {
-                            var _value    = gamepad_axis_value(gamepad, _axis_array[_i]);
+                            var _axis     = _axis_array[_i];
+                            var _value    = gamepad_axis_value(gamepad, _axis);
                             var _negative = (_value < 0);
                             
-                            if (abs(_value) > INPUT_DEFAULT_MIN_THRESHOLD)
+                            if (abs(_value) > input_axis_threshold_get(_axis, _player_index))
                             {
                                 set_binding(INPUT_SOURCE.GAMEPAD, _verb, _alternate, new __input_class_binding("gp axis", _axis_array[_i], _negative));
                                 __input_trace("Rebinding success: Player ", _player_index, " verb=", _verb, " (alternate=", _alternate, ") set to gamepad axis ", _button_array[_i], " (negative=", _negative, ")");
